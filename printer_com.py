@@ -1,7 +1,33 @@
 import time
+import serial
 
 PRINTER_READ_BED_TEMP_CMD = "M105"
 PRINTER_SET_TARGET_BED_TEMP_CMD = "M140 S" # add temperature in Celsius after S
+
+
+
+def openSerial():
+    serial_port = "COM3"
+    serial_baude_rate = 115200
+
+    ser = serial.Serial(parity=serial.PARITY_NONE,
+                        stopbits=serial.STOPBITS_ONE,
+                        bytesize=serial.EIGHTBITS)
+
+    ser.baudrate = serial_baude_rate
+    ser.port = serial_port
+
+    ser.open()
+
+    if not ser.is_open:
+        print('Error: unable to connect to printer via serial interface.')
+        return None
+
+    return ser
+
+
+def closeSerial(ser):
+    ser.close()
 
 def sendPrinterCmd(ser, cmd):
 
@@ -70,7 +96,7 @@ def getBedTempTarget(ser):
     return bed_temp_target
 
 def setTargetBedTemp(ser, temp):
-    set_bed_target_temp = PRINTER_SET_TARGET_BED_TEMP_CMD + temp
+    set_bed_target_temp = PRINTER_SET_TARGET_BED_TEMP_CMD + str(temp)
 
     # Sending temperature target change request
     sendPrinterCmd(ser, set_bed_target_temp)

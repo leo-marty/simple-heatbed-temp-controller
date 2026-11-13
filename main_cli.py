@@ -6,14 +6,7 @@ import time
 serial_port = "COM3"
 serial_baude_rate = 115200
 
-ser = serial.Serial(parity=serial.PARITY_NONE,
-                    stopbits=serial.STOPBITS_ONE,
-                    bytesize=serial.EIGHTBITS)
-
-ser.baudrate = serial_baude_rate
-ser.port = serial_port
-
-ser.open()
+ser = printer_com.openSerial()
 
 if not ser.is_open:
     print('Error: unable to connect to printer via serial interface.')
@@ -59,4 +52,4 @@ while interact:
         print(bed_temp, "°C")
 
 
-ser.close()
+printer_com.closeSerial(ser)
